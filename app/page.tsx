@@ -1,10 +1,14 @@
 import Link from "next/link"
+import { SiOpenaigym } from "react-icons/si"
+
 
 function HomePage() {
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content text-center">
         <div className="max-w-md">
+          <SiOpenaigym className='w-30 h-30 text-primary mx-auto mb-8' />
+
           <h1 className="text-6xl font-bold text-primary">
             Tour Gen
           </h1>
@@ -15,7 +19,6 @@ function HomePage() {
           <Link href='/chat' className="btn btn-secondary">
             Commencer
           </Link>
-          {/* Ton nom + lien vers le portfolio */}
           <p className="mt-4 text-sm text-gray-500">
             © Créé par{" "}
             <a
