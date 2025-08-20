@@ -5,13 +5,13 @@ import prisma from './db';
 import type { ChatCompletionMessageParam } from "openai/resources"
 import { Destination, Tour } from "./types"
 
-const opeani = new OpenAI({
+const openai = new OpenAI({
     baseURL: "https://models.github.ai/inference",
     apiKey: process.env.OPENAI_API_KEY
 })
 
 export const generateChatResponse = async (chatMessages: ChatCompletionMessageParam[]) => {
-    const response = await opeani.chat.completions.create({
+    const response = await openai.chat.completions.create({
         messages: [
             { role: "system", content: "Vous êtes un assistant aidant" },
             ...chatMessages
@@ -61,7 +61,7 @@ ou si elle n’est pas située dans ${country}, retourne { "tour": null }, sans 
 
 
     try {
-        const response = await opeani.chat.completions.create({
+        const response = await openai.chat.completions.create({
             messages: [
                 { role: 'system', content: "Tu es un guide touristique" },
                 { role: 'user', content: query }
@@ -127,3 +127,4 @@ export const getSingleTour = async (id: string) => {
         }
     })
 }
+

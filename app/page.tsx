@@ -16,7 +16,7 @@ function HomePage() {
             Une façon simple d’explorer autrement, ou de trouver l’inspiration avant un voyage.
           </p>
 
-          <Link href='/chat' className="btn btn-secondary">
+          <Link href='/tours' className="btn btn-secondary">
             Commencer
           </Link>
           <p className="mt-4 text-sm text-gray-500">
