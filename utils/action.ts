@@ -4,6 +4,7 @@ import prisma from './db';
 
 import type { ChatCompletionMessageParam } from "openai/resources"
 import { Destination, Tour } from "./types"
+import { ClientError } from "./ClientError";
 
 const openai = new OpenAI({
     baseURL: "https://models.github.ai/inference",
@@ -94,7 +95,7 @@ export const createNewTour = async (tour: Tour) => {
         },
     })
     if (toursToday >= 5) {
-        throw new Error("Vous avez déjà créé 5 excursions aujourd'hui")
+        throw new ClientError("Vous avez déjà créé 5 excursions aujourd'hui")
     }
 
     return prisma.tour.create({
