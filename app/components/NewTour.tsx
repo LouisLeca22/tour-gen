@@ -21,12 +21,24 @@ function NewTour() {
                 if (existingTour) {
                     return { ...existingTour, stops: existingTour.stops as string[] }
                 }
-                const newTour = await generateTourResponse(destination)
-                if (newTour) {
-                    await createNewTour(newTour)
-                    queryClient.invalidateQueries({ queryKey: ['tours'] })
-                    return newTour
+                try {
+
+                    const newTour = await generateTourResponse(destination)
+                    if (newTour) {
+                        await createNewTour(newTour)
+                        queryClient.invalidateQueries({ queryKey: ['tours'] })
+                        return newTour
+                    }
+                } catch (error: unknown) {
+                    if (error instanceof Error) {
+                        toast.error(error.message)
+                        return null
+                    } else {
+                        toast.error("Une erreur est survenue")
+                        return null
+                    }
                 }
+
 
                 toast.error("Aucune ville trouvée...")
                 return null

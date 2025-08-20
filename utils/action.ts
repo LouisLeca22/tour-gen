@@ -83,6 +83,20 @@ ou si elle n’est pas située dans ${country}, retourne { "tour": null }, sans 
 }
 
 export const createNewTour = async (tour: Tour) => {
+    const today = new Date().toISOString().split("T")[0]
+
+    const toursToday = await prisma.tour.count({
+        where: {
+            createdAt: {
+                gte: new Date(today),
+                lt: new Date(new Date(today).getTime() + 24 * 60 * 60 * 1000), // tomorrow 00:00
+            },
+        },
+    })
+    if (toursToday >= 5) {
+        throw new Error("Vous avez déjà créé 5 excursions aujourd'hui.")
+    }
+
     return prisma.tour.create({
         data: tour
     })
