@@ -1,10 +1,10 @@
 "use server"
 import OpenAI from "openai"
 import prisma from './db';
+import { Prisma } from "@prisma/client"
 
 import type { ChatCompletionMessageParam } from "openai/resources"
 import { Destination, Tour } from "./types"
-import { ClientError } from "./ClientError";
 
 const openai = new OpenAI({
     baseURL: "https://models.github.ai/inference",
@@ -83,7 +83,11 @@ ou si elle n’est pas située dans ${country}, retourne { "tour": null }, sans 
     }
 }
 
-export const createNewTour = async (tour: Tour) => {
+export type CreateNewTourActionResult =
+    | { success: true; data: Tour }
+    | { success: false; error: string }
+
+export const createNewTour = async (tour: Tour): Promise<CreateNewTourActionResult> => {
     const today = new Date().toISOString().split("T")[0]
 
     const toursToday = await prisma.tour.count({
@@ -95,12 +99,29 @@ export const createNewTour = async (tour: Tour) => {
         },
     })
     if (toursToday >= 5) {
-        throw new ClientError("Vous avez déjà créé 5 excursions aujourd'hui")
+        return {
+            success: false,
+            error: "Vous avez déjà créé 5 excursions aujourd'hui"
+        }
     }
 
-    return prisma.tour.create({
+    const created = await prisma.tour.create({
         data: tour
     })
+
+    const result: Tour = {
+        city: created.city,
+        country: created.country,
+        tourType: created.tourType,
+        title: created.title,
+        description: created.description,
+        stops: created.stops as string[],
+    }
+
+    return {
+        success: true,
+        data: result
+    }
 }
 
 export const getAllTours = async (searchTerm: string) => {

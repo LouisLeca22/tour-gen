@@ -1,6 +1,6 @@
 "use client"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { getExistingTour, generateTourResponse, createNewTour } from "@/utils/action"
+import { getExistingTour, generateTourResponse, createNewTour, CreateNewTourActionResult } from "@/utils/action"
 import TourInfo from "./TourInfo"
 import toast from "react-hot-toast"
 import type { Destination, Tour } from "@/utils/types"
@@ -25,9 +25,13 @@ function NewTour() {
 
                 const newTour = await generateTourResponse(destination)
                 if (newTour) {
-                    await createNewTour(newTour)
+                    const result = await createNewTour(newTour)
                     queryClient.invalidateQueries({ queryKey: ['tours'] })
-                    return newTour
+                    if (!result.success) {
+                        toast.error(result.error)
+                    } else {
+                        return result.data
+                    }
                 }
 
 
