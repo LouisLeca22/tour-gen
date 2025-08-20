@@ -29,6 +29,7 @@ function NewTour() {
                     queryClient.invalidateQueries({ queryKey: ['tours'] })
                     if (!result.success) {
                         toast.error(result.error)
+                        return null
                     } else {
                         return result.data
                     }
