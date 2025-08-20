@@ -94,7 +94,7 @@ export const createNewTour = async (tour: Tour) => {
         },
     })
     if (toursToday >= 5) {
-        throw new Error("Vous avez déjà créé 5 excursions aujourd'hui.")
+        throw new Error("Vous avez déjà créé 5 excursions aujourd'hui")
     }
 
     return prisma.tour.create({

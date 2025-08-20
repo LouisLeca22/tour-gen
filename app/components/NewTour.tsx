@@ -21,28 +21,22 @@ function NewTour() {
                 if (existingTour) {
                     return { ...existingTour, stops: existingTour.stops as string[] }
                 }
-                try {
 
-                    const newTour = await generateTourResponse(destination)
-                    if (newTour) {
-                        await createNewTour(newTour)
-                        queryClient.invalidateQueries({ queryKey: ['tours'] })
-                        return newTour
-                    }
-                } catch (error: unknown) {
-                    if (error instanceof Error) {
-                        toast.error(error.message)
-                        return null
-                    } else {
-                        toast.error("Une erreur est survenue")
-                        return null
-                    }
+
+                const newTour = await generateTourResponse(destination)
+                if (newTour) {
+                    await createNewTour(newTour)
+                    queryClient.invalidateQueries({ queryKey: ['tours'] })
+                    return newTour
                 }
 
 
                 toast.error("Aucune ville trouvée...")
                 return null
-            }
+            },
+            onError: (error) => {
+                toast.error(error.message)
+            },
         })
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
