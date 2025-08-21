@@ -31,11 +31,30 @@ export async function getUserById({
     }
 }
 
-export async function UpdateUser(id: string, data: Partial<User>) {
+export async function updateUser(clerkId: string, data: Partial<User>) {
     try {
+        if (!clerkId) {
+            throw new Error('id or clerkId is required')
+        }
+
         const user = await prisma.user.update({
-            where: { id },
+            where: { clerkId },
             data
+        })
+        return { user }
+    } catch (error) {
+        return { error }
+    }
+}
+
+export async function deleteUser(clerkId: string) {
+    try {
+        if (!clerkId) {
+            throw new Error('id or clerkId is required')
+        }
+
+        const user = await prisma.user.delete({
+            where: { clerkId }
         })
         return { user }
     } catch (error) {

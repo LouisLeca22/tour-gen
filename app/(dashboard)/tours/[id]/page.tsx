@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import axios from "axios"
+import DeleteTourButton from "@/app/components/DeleteButton"
 const url = `https://api.unsplash.com/search/photos?client_id=${process.env.UNSPLASH_API_KEY}&query=`;
 
 export default async function SingleTourPage({ params }: { params: Promise<{ id: string }> }) {
@@ -26,6 +27,7 @@ export default async function SingleTourPage({ params }: { params: Promise<{ id:
                 </div> : null
             }
             <TourInfo tour={{ ...tour, stops: tour.stops as string[] }} />
+            <DeleteTourButton tourId={tour.id} />
         </div>
     )
 }

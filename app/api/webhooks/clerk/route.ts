@@ -1,7 +1,7 @@
 import { Webhook } from 'svix'
 import { headers } from "next/headers";
 import { WebhookEvent } from '@clerk/nextjs/server'
-import { createUser } from '@/utils/users'
+import { createUser, updateUser, deleteUser } from '@/utils/users'
 import { User } from '@prisma/client'
 
 export async function POST(req: Request) {
@@ -71,5 +71,28 @@ export async function POST(req: Request) {
         await createUser(user as User)
     }
 
+    if (eventType === 'user.updated') {
+        const { id, email_addresses, first_name, last_name, image_url } = evt.data
+        if (!id) {
+            return new Response('Missing user id', { status: 400 })
+        }
+
+        await updateUser(id, {
+            email: email_addresses?.[0]?.email_address,
+            firstName: first_name ?? undefined,
+            lastName: last_name ?? undefined,
+            imageUrl: image_url ?? undefined
+        })
+    }
+    if (eventType === "user.deleted") {
+        const { id } = evt.data
+        if (!id) {
+            return new Response('Missing user id', { status: 400 })
+        }
+
+        await deleteUser(id)
+
+
+    }
     return new Response('', { status: 200 })
 }

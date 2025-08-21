@@ -4,6 +4,8 @@ import prisma from './db';
 import { currentUser } from "@clerk/nextjs/server"
 import type { ChatCompletionMessageParam } from "openai/resources"
 import { Destination, Tour } from "./types"
+import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation";
 
 const openai = new OpenAI({
     baseURL: "https://models.github.ai/inference",
@@ -181,3 +183,28 @@ export const getSingleTour = async (id: string) => {
     })
 }
 
+
+
+export const deleteTour = async (id: string) => {
+    const user = await currentUser()
+
+    if (!user) {
+        throw new Error("Utilisateur non connecté")
+    }
+
+    const tour = await prisma.tour.findUnique({ where: { id } })
+
+    if (!tour) {
+        throw new Error("Cette excursion n'existe pas")
+    }
+
+    if (tour.userId !== user.id) {
+        throw new Error("Vous n'avez pas l'autorisation de supprimer cette excursion")
+    }
+
+    await prisma.tour.delete({ where: { id } })
+
+    revalidatePath("/tours")
+
+    redirect("/tours")
+}
