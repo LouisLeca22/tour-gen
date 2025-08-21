@@ -1,8 +1,7 @@
 "use server"
 import OpenAI from "openai"
 import prisma from './db';
-import { Prisma } from "@prisma/client"
-
+import { currentUser } from "@clerk/nextjs/server"
 import type { ChatCompletionMessageParam } from "openai/resources"
 import { Destination, Tour } from "./types"
 
@@ -10,6 +9,7 @@ const openai = new OpenAI({
     baseURL: "https://models.github.ai/inference",
     apiKey: process.env.OPENAI_API_KEY
 })
+
 
 export const generateChatResponse = async (chatMessages: ChatCompletionMessageParam[]) => {
     const response = await openai.chat.completions.create({
@@ -89,7 +89,13 @@ export type CreateNewTourActionResult =
 
 export const createNewTour = async (tour: Tour): Promise<CreateNewTourActionResult> => {
     const today = new Date().toISOString().split("T")[0]
-
+    const user = await currentUser()
+    if (!user) {
+        return {
+            success: false,
+            error: "L'utilisateur n'existe pas"
+        }
+    }
     const toursToday = await prisma.tour.count({
         where: {
             createdAt: {
@@ -106,7 +112,7 @@ export const createNewTour = async (tour: Tour): Promise<CreateNewTourActionResu
     }
 
     const created = await prisma.tour.create({
-        data: tour
+        data: { ...tour, userId: user.id }
     })
 
     const result: Tour = {
@@ -125,8 +131,18 @@ export const createNewTour = async (tour: Tour): Promise<CreateNewTourActionResu
 }
 
 export const getAllTours = async (searchTerm: string) => {
+
+    const user = await currentUser()
+
+    if (!user) {
+        return []
+    }
+
     if (!searchTerm) {
         const tours = await prisma.tour.findMany({
+            where: {
+                userId: user.id,
+            },
             orderBy: {
                 city: 'asc'
             }
@@ -135,6 +151,7 @@ export const getAllTours = async (searchTerm: string) => {
     }
     const tours = await prisma.tour.findMany({
         where: {
+            userId: user.id,
             OR: [
                 {
                     city: {

@@ -1,0 +1,5 @@
+ngrok http --url=aware-swine-selected.ngrok-free.app 80
+
+aware-swine-selected.ngrok-free.app
+
+ngrok config add-authtoken 31bTDQzl8NVROmoPyLfC60Ho1pj_4ugqHGaJsk5r2uDj3XRS1
