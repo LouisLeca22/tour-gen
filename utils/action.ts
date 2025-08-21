@@ -100,6 +100,7 @@ export const createNewTour = async (tour: Tour): Promise<CreateNewTourActionResu
     }
     const toursToday = await prisma.tour.count({
         where: {
+            userId: user.id,
             createdAt: {
                 gte: new Date(today),
                 lt: new Date(new Date(today).getTime() + 24 * 60 * 60 * 1000), // tomorrow 00:00
