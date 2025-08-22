@@ -13,7 +13,7 @@ function HomePage() {
             Tour Gen
           </h1>
           <p className="py-6 text-lg leading-loose">
-            Une façon simple d’explorer autrement, ou de trouver l’inspiration avant un voyage.
+            Une façon simple de trouver l’inspiration avant un voyage.
           </p>
 
           <Link href='/tours' className="btn btn-secondary">
