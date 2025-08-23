@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Tour',
     description: 'Sentez-vous chez vous, même loin de chez vous.',
-    images: ['https://yourapp.vercel.app/images/preview.png'],
+    images: ['https://tou-gen.vercel.app/images/preview.png'],
   },
 };
 
