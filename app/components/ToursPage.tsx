@@ -15,7 +15,7 @@ function ToursPage() {
         <>
             <form className="max-w-lg mb-12">
                 <div className="join w-full">
-                    <input type="text" required placeholder="Entrer une ville ou un pays..." className="input placeholder-black input-bordered join-item w-full" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+                    <input type="text" required placeholder="Entrer une ville ou un pays..." className="input input-bordered join-item w-full" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                     <button className="btn btn-primary join-item" type="button" disabled={isPending} onClick={() => setSearchValue("")}>
                         {isPending ? "Patientez..." : "réinitialiser"}
                     </button>
