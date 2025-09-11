@@ -66,13 +66,6 @@ npm run dev
 
 ---
 
-## 📄 Licence
-
-Ce projet est sous licence MIT.  
-© Louis Leca – 2025
-
----
-
 ## 🙌 Remerciements
 
 Merci aux outils open-source qui rendent ce projet possible ❤️
