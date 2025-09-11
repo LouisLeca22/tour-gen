@@ -76,7 +76,7 @@ function NewTour() {
                         <option value="Luxe">Luxe</option>
                         <option value="Budget">Budget</option>
                         <option value="Nature">Nature</option>
-                        <option value="Détente">Détente</option>
+                        <option value="BienEtre">Bien-être</option>
                         <option value="Photographie">Photographie</option>
                         <option value="Business">Business</option>
                         <option value="Accessible">Accessible</option>
