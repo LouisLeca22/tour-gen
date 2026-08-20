@@ -2,27 +2,34 @@
 
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
-import { generateChatResponse } from "@/utils/action"
-import type { ChatCompletionMessageParam } from "openai/resources"
-
+import { generateChatResponse, type ChatMessage } from "@/utils/action"
 import toast from "react-hot-toast"
+
 function Chat() {
     const [text, setText] = useState<string>('')
-    const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([])
+    const [messages, setMessages] = useState<ChatMessage[]>([])
+
     const { mutate, isPending } = useMutation({
-        mutationFn: (query: ChatCompletionMessageParam) => generateChatResponse([...messages, query]),
-        onSuccess: (data) => {
-            if (!data) {
-                toast.error("Un erreur s'est produite...")
+        mutationFn: (query: ChatMessage) => generateChatResponse([...messages, query]),
+        onSuccess: (responseContent) => {
+            if (!responseContent) {
+                toast.error("Une erreur s'est produite...")
                 return
             }
-            setMessages((prev) => [...prev, data])
+
+            // Wrap the string response into a ChatMessage object
+            const modelMessage: ChatMessage = {
+                role: "model",
+                content: responseContent
+            }
+
+            setMessages((prev) => [...prev, modelMessage])
         }
     })
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const query: ChatCompletionMessageParam = { role: "user", content: text }
+        const query: ChatMessage = { role: "user", content: text }
         mutate(query)
         setMessages((prev) => [...prev, query])
         setText('')
@@ -32,16 +39,15 @@ function Chat() {
         <div className="min-h-[calc(100vh-6rem)] grid grid-rows-[1fr_auto]">
             <div>
                 {messages.map((message, index) => {
-                    const avatar = message.role == 'user' ? '👤' : '🤖';
-                    const bcg = message.role == 'user' ? 'bg-base-200' : 'bg-base-100';
+                    const avatar = message.role === 'user' ? '👤' : '🤖';
+                    const bcg = message.role === 'user' ? 'bg-base-200' : 'bg-base-100';
                     return (
                         <div
                             key={index}
-                            className={` ${bcg} flex py-6 -mx-8 px-8
-               text-xl leading-loose border-b border-base-300`}
+                            className={` ${bcg} flex py-6 -mx-8 px-8 text-xl leading-loose border-b border-base-300`}
                         >
                             <span className='mr-4 '>{avatar}</span>
-                            {typeof message.content === "string" && <p className='max-w-3xl'>{message.content}</p>}
+                            <p className='max-w-3xl'>{message.content}</p>
                         </div>
                     );
                 })}
@@ -56,4 +62,5 @@ function Chat() {
         </div>
     )
 }
+
 export default Chat

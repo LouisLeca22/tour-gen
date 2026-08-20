@@ -10,6 +10,11 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
 });
 
+export type ChatMessage = {
+    role: "user" | "model";
+    content: string;
+};
+
 
 
 export const generateChatResponse = async (chatMessages: Array<{ role: string; content: string }>) => {
